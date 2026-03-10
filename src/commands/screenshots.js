@@ -1,9 +1,10 @@
 const path = require('path');
-const { launchBrowser, loginToGitHub } = require('../browser');
-const { captureScreenshot } = require('../screenshot');
 const { readUrlsFromFile, printSummaryTable } = require('../utils');
 
 async function runScreenshots(urls, options) {
+  // Lazy-load Playwright dependencies only when this command runs
+  const { launchBrowser, loginToGitHub } = require('../browser');
+  const { captureScreenshot } = require('../screenshot');
   let allUrls = [...urls];
   
   if (options.file) {
