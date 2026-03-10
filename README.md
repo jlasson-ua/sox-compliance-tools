@@ -22,7 +22,7 @@ Generate a CSV report of merged PRs for SOX audit compliance.
 
 ## Requirements
 
-- Node.js 18 or higher
+- Node.js 16 or higher (Node 18+ required for `screenshots` command)
 - npm
 
 ## Installation
@@ -31,8 +31,45 @@ Generate a CSV report of merged PRs for SOX audit compliance.
 git clone https://github.com/jlasson-ua/sox-compliance-tools.git
 cd sox-compliance-tools
 npm install
+```
+
+For the `screenshots` command only (requires Node 18+):
+```bash
 npx playwright install chromium
 ```
+
+## Getting Started
+
+### First-Time Setup
+
+Run the setup wizard to configure GitHub authentication:
+
+```bash
+node bin/sox-tools.js setup
+```
+
+This will:
+1. Guide you through creating a GitHub Personal Access Token (PAT)
+2. Validate the token works
+3. Save it locally to `~/.sox-tools/config.json` (never stored in the repo)
+
+### Authentication Options
+
+The tool supports multiple ways to authenticate with GitHub (checked in this order):
+
+1. **`--token` flag** - Pass a token directly to any command
+2. **`GITHUB_TOKEN` env var** - Set this environment variable
+3. **`gh` CLI** - If you have [GitHub CLI](https://cli.github.com/) installed and authenticated
+4. **Saved token** - From running `sox-tools setup` (stored in `~/.sox-tools/config.json`)
+5. **Interactive prompt** - If none of the above, you'll be prompted to enter a token
+
+### Creating a GitHub PAT
+
+1. Go to [GitHub Token Settings](https://github.com/settings/tokens/new)
+2. Give it a name like "sox-compliance-tools"
+3. Select expiration (recommend 90 days)
+4. Select scope: **repo** (Full control of private repositories)
+5. Click "Generate token" and copy it
 
 ## Usage
 

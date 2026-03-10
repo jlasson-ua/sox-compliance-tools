@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { createOctokit, fetchClosedPRs, fetchPRDetails, fetchPRCommits } = require('../github-client');
+const { createOctokitInteractive, fetchClosedPRs, fetchPRDetails, fetchPRCommits } = require('../github-client');
 
 // UA Fiscal Year starts April 1
 // FY26 = Apr 2025 - Mar 2026
@@ -150,8 +150,8 @@ async function runAuditReport(options) {
   console.log(`Output: ${outputFile}`);
   console.log('');
   
-  // Create GitHub client
-  const octokit = createOctokit(options.token);
+  // Create GitHub client (with interactive prompt if no token found)
+  const octokit = await createOctokitInteractive(options.token);
   
   // Fetch closed PRs
   console.log('Fetching closed PRs...');

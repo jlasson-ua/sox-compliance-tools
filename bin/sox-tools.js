@@ -3,6 +3,7 @@
 const { program } = require('commander');
 const { registerScreenshotsCommand } = require('../src/commands/screenshots');
 const { registerAuditReportCommand } = require('../src/commands/audit-report');
+const { registerSetupCommand } = require('../src/commands/setup');
 
 program
   .name('sox-tools')
@@ -10,6 +11,7 @@ program
   .version('1.0.0');
 
 // Register subcommands
+registerSetupCommand(program);
 registerScreenshotsCommand(program);
 registerAuditReportCommand(program);
 
