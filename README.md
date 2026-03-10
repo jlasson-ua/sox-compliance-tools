@@ -12,6 +12,14 @@ Capture full-page screenshots of GitHub Pull Requests with UTC timestamps for SO
 - **SSO support**: Opens a headed browser so you can log in to GitHub and complete SSO authentication
 - **Batch processing**: Pass multiple URLs or read from a file
 
+### Audit Report Command
+Generate a CSV report of merged PRs for SOX audit compliance.
+
+- **Fiscal quarter support**: Specify quarters like `FY26Q1` instead of date ranges
+- **Auto-detects GitHub token**: Uses `gh` CLI authentication or `GITHUB_TOKEN` env var
+- **Same output format**: Compatible with the original PHP script's CSV format
+- **Filters sync PRs**: Automatically excludes downmerge, sync, and release PRs
+
 ## Requirements
 
 - Node.js 18 or higher
@@ -91,6 +99,54 @@ screenshots/
 ```
 
 If no Jira ticket is found in the PR title, the folder will be named `PR-{number}`.
+
+### Audit Report
+
+Generate a CSV of merged PRs for SOX compliance audit.
+
+#### Using Fiscal Quarters (Recommended)
+
+```bash
+# Run for FY26 Q1 (Apr-Jun 2025)
+node bin/sox-tools.js audit-report --quarter FY26Q1
+
+# See all quarter date ranges
+node bin/sox-tools.js audit-report --list-quarters
+```
+
+#### Using Date Range
+
+```bash
+node bin/sox-tools.js audit-report --from 2024-04-01 --to 2024-06-30
+```
+
+#### Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `-q, --quarter <quarter>` | Fiscal quarter (e.g., FY26Q1) | - |
+| `--from <date>` | Start date (YYYY-MM-DD) | - |
+| `--to <date>` | End date (YYYY-MM-DD) | - |
+| `-r, --repo <owner/repo>` | GitHub repository | `ua-digital-commerce/ua-sfra` |
+| `-b, --base <branch>` | Base branch filter | `develop` |
+| `-o, --output <dir>` | Output directory | `./reports` |
+| `-t, --token <token>` | GitHub PAT (auto-detects from `gh` CLI) | - |
+| `--list-quarters` | Show fiscal quarter date ranges | - |
+
+#### Output
+
+CSV file with columns:
+- Pull Request Title
+- Pull Request URL
+- Pull Request Creator
+- JIRA Link
+- Pull Request Created At
+- Pull Request Merged At
+- Pull Request Merged By
+- First Code Author Name
+- First Code Author Email
+- Additional Authors (NAME|EMAIL)
+- Pull Request Body
 
 ## Adding New Commands
 

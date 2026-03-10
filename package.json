@@ -9,13 +9,20 @@
   "scripts": {
     "start": "node bin/sox-tools.js"
   },
-  "keywords": ["sox", "compliance", "github", "screenshots", "playwright"],
+  "keywords": [
+    "sox",
+    "compliance",
+    "github",
+    "screenshots",
+    "playwright"
+  ],
   "author": "",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "@octokit/rest": "^20.1.2",
     "commander": "^11.1.0",
     "playwright": "^1.40.0"
   }
