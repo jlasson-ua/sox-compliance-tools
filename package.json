@@ -1,15 +1,15 @@
 {
-  "name": "sox-pr-screenshots",
+  "name": "sox-compliance-tools",
   "version": "1.0.0",
-  "description": "CLI tool to capture GitHub PR screenshots with timestamps for SOX compliance",
-  "main": "bin/sox-screenshots.js",
+  "description": "SOX compliance tools for UA Digital Commerce",
+  "main": "bin/sox-tools.js",
   "bin": {
-    "sox-screenshots": "./bin/sox-screenshots.js"
+    "sox-tools": "./bin/sox-tools.js"
   },
   "scripts": {
-    "start": "node bin/sox-screenshots.js"
+    "start": "node bin/sox-tools.js"
   },
-  "keywords": ["github", "screenshots", "sox", "compliance", "playwright"],
+  "keywords": ["sox", "compliance", "github", "screenshots", "playwright"],
   "author": "",
   "license": "MIT",
   "engines": {

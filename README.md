@@ -1,8 +1,11 @@
-# SOX PR Screenshots
+# SOX Compliance Tools
 
-CLI tool to capture full-page screenshots of GitHub Pull Requests with UTC timestamps for SOX compliance audits.
+CLI toolkit for SOX compliance tasks at UA Digital Commerce.
 
 ## Features
+
+### Screenshots Command
+Capture full-page screenshots of GitHub Pull Requests with UTC timestamps for SOX compliance audits.
 
 - **Timestamp banner**: Injects a fixed UTC timestamp at the top of each screenshot
 - **Auto-organizes by Jira ticket**: Extracts ticket ID from PR title (e.g., `SFCC-1234`) and creates a folder per ticket
@@ -17,23 +20,25 @@ CLI tool to capture full-page screenshots of GitHub Pull Requests with UTC times
 ## Installation
 
 ```bash
-git clone https://github.com/jlasson-ua/sox-pr-screenshots.git
-cd sox-pr-screenshots
+git clone https://github.com/jlasson-ua/sox-compliance-tools.git
+cd sox-compliance-tools
 npm install
 npx playwright install chromium
 ```
 
 ## Usage
 
-### Pass URLs directly
+### Screenshots
+
+#### Pass URLs directly
 
 ```bash
-node bin/sox-screenshots.js \
+node bin/sox-tools.js screenshots \
   https://github.com/ua-digital-commerce/ua-sfra/pull/22515 \
   https://github.com/ua-digital-commerce/ua-sfra/pull/22278
 ```
 
-### Read URLs from a file
+#### Read URLs from a file
 
 Create a text file with one URL per line:
 
@@ -46,10 +51,10 @@ https://github.com/ua-digital-commerce/ua-sfra/pull/22036
 Then run:
 
 ```bash
-node bin/sox-screenshots.js --file urls.txt
+node bin/sox-tools.js screenshots --file urls.txt
 ```
 
-### Options
+#### Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
@@ -58,20 +63,20 @@ node bin/sox-screenshots.js --file urls.txt
 | `-p, --pattern <regex>` | Jira ticket pattern to extract from PR title | `SFCC-\d+` |
 | `-k, --keep-open` | Keep browser open after processing | `false` |
 
-### Examples
+#### Examples
 
 ```bash
 # Custom output directory
-node bin/sox-screenshots.js --output ~/work/sox-audit --file urls.txt
+node bin/sox-tools.js screenshots --output ~/work/sox-audit --file urls.txt
 
 # Different Jira pattern (e.g., PROJ-1234)
-node bin/sox-screenshots.js --pattern "PROJ-\d+" --file urls.txt
+node bin/sox-tools.js screenshots --pattern "PROJ-\d+" --file urls.txt
 
 # Keep browser open to process more URLs manually
-node bin/sox-screenshots.js --keep-open --file urls.txt
+node bin/sox-tools.js screenshots --keep-open --file urls.txt
 ```
 
-## Output Structure
+### Output Structure
 
 Screenshots are organized by Jira ticket:
 
@@ -87,17 +92,13 @@ screenshots/
 
 If no Jira ticket is found in the PR title, the folder will be named `PR-{number}`.
 
-## How It Works
+## Adding New Commands
 
-1. Launches a headed Chromium browser
-2. Navigates to GitHub login and waits for you to authenticate (including SSO)
-3. For each PR URL:
-   - Navigates to the page
-   - Extracts the Jira ticket from the page title
-   - Injects a UTC timestamp banner at the top of the page
-   - Takes a full-page screenshot
-   - Saves to `{output}/{TICKET}/pr-{number}.png`
-4. Prints a summary table of all captured screenshots
+To add a new SOX compliance command:
+
+1. Create a new file in `src/commands/` (e.g., `src/commands/mycommand.js`)
+2. Export a `registerMyCommand(program)` function that adds the subcommand
+3. Import and call it in `bin/sox-tools.js`
 
 ## License
 
