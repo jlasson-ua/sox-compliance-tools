@@ -193,27 +193,6 @@ To add a new SOX compliance command:
 2. Export a `registerMyCommand(program)` function that adds the subcommand
 3. Import and call it in `bin/sox-tools.js`
 
-## Comparison with Legacy PHP Script
-
-The `audit-report` command replaces the legacy `AuditReportV2.php` script with improvements:
-
-| Feature | Node Version | PHP Version |
-|---------|-------------|-------------|
-| **Base branch filtering** | Correct (only `develop`) | Bug: includes `team/*` branches |
-| **Authentication** | Auto-detects from gh CLI, env var, or saved config | Manual PAT on command line |
-| **Date input** | Fiscal quarters (`FY26Q1`) or date range | Date range only |
-| **Rate limiting** | Automatic retry with backoff | None |
-| **Skip word filtering** | Same as PHP | Original implementation |
-
-### Validation Results
-
-When comparing output for the same date range (2026-01-01 to 2026-03-10):
-
-- **Node version**: 212 PRs (only PRs merged to `develop`)
-- **PHP version**: 227 PRs (incorrectly includes PRs merged to `team/endor`, `team/apac-squad`, etc.)
-
-The Node version produces more accurate results for SOX compliance by correctly filtering to only PRs merged into the production branch (`develop`).
-
 ## License
 
 MIT
