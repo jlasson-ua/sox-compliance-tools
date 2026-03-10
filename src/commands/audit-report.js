@@ -178,10 +178,23 @@ async function runAuditReport(options) {
     
     process.stdout.write(`\r  Processing PR #${issue.number} (${i + 1}/${issues.length})...`);
     
+    // Helper for retrying API calls with delay
+    const fetchWithRetry = async (fn, maxRetries = 3) => {
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          return await fn();
+        } catch (err) {
+          if (attempt === maxRetries) throw err;
+          // Wait longer on each retry (1s, 2s, 3s)
+          await new Promise(r => setTimeout(r, attempt * 1000));
+        }
+      }
+    };
+    
     try {
-      // Fetch PR details
+      // Fetch PR details with retry
       const prNumber = issue.number;
-      const details = await fetchPRDetails(octokit, owner, repo, prNumber);
+      const details = await fetchWithRetry(() => fetchPRDetails(octokit, owner, repo, prNumber));
       
       // Skip if not merged
       if (!details.merged) continue;
@@ -191,8 +204,11 @@ async function runAuditReport(options) {
       const baseRef = details.base?.ref?.toLowerCase() || '';
       if (!baseLabel.includes(options.base) && baseRef !== options.base) continue;
       
-      // Fetch commits
-      const commits = await fetchPRCommits(octokit, owner, repo, prNumber);
+      // Fetch commits with retry
+      const commits = await fetchWithRetry(() => fetchPRCommits(octokit, owner, repo, prNumber));
+      
+      // Small delay between PRs to avoid rate limiting
+      await new Promise(r => setTimeout(r, 100));
       
       // Extract additional authors
       const firstAuthorEmail = commits[0]?.commit?.author?.email || '';
@@ -222,7 +238,7 @@ async function runAuditReport(options) {
         'Pull Request Body': details.body || '',
       });
     } catch (err) {
-      console.error(`\n  Error processing PR #${issue.number}: ${err.message}`);
+      console.error(`\n  Error processing PR #${issue.number}: ${err.message.substring(0, 100)}`);
     }
   }
   

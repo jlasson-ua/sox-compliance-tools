@@ -138,18 +138,22 @@ async function createOctokitInteractive(token) {
 async function fetchClosedPRs(octokit, owner, repo, base, dateFrom, dateTo, onPage) {
   const prs = [];
   let page = 1;
+  const dateFromObj = new Date(dateFrom);
+  const MAX_PAGES = 50; // Safety limit to prevent infinite loops
   
-  while (true) {
+  while (page <= MAX_PAGES) {
     if (onPage) onPage(page);
     
+    // Fetch closed issues sorted by closed date (most recent first)
+    // We use 'since' as a rough filter but rely on post-filtering for exact range
     const { data } = await octokit.rest.issues.listForRepo({
       owner,
       repo,
       state: 'closed',
-      base,
-      per_page: 30,
+      per_page: 100,
       page,
-      since: dateFrom,
+      sort: 'created',
+      direction: 'desc',
     });
     
     if (data.length === 0) break;
@@ -158,7 +162,18 @@ async function fetchClosedPRs(octokit, owner, repo, base, dateFrom, dateTo, onPa
     const prItems = data.filter(item => item.pull_request);
     prs.push(...prItems);
     
-    if (data.length < 30) break;
+    // Check if ALL items on this page were closed before our date range
+    // This indicates we've gone far enough back
+    const allBeforeDateRange = data.every(item => {
+      const closedAt = new Date(item.closed_at);
+      return closedAt < dateFromObj;
+    });
+    
+    if (allBeforeDateRange) {
+      break;
+    }
+    
+    if (data.length < 100) break;
     page++;
   }
   
