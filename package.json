@@ -19,11 +19,12 @@
   "author": "",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "@octokit/rest": "^20.1.2",
     "commander": "^11.1.0",
+    "node-fetch": "^2.7.0",
     "playwright": "^1.40.0"
   }
 }

@@ -1,5 +1,6 @@
 const { Octokit } = require('@octokit/rest');
 const { execSync } = require('child_process');
+const fetch = require('node-fetch');
 
 function getGitHubToken() {
   // Try to get token from gh CLI first
@@ -25,7 +26,10 @@ function createOctokit(token) {
     throw new Error('GitHub token required. Either:\n  - Run "gh auth login" to authenticate with gh CLI\n  - Set GITHUB_TOKEN environment variable\n  - Pass --token <token> option');
   }
   
-  return new Octokit({ auth: authToken });
+  return new Octokit({ 
+    auth: authToken,
+    request: { fetch }
+  });
 }
 
 async function fetchClosedPRs(octokit, owner, repo, base, dateFrom, dateTo, onPage) {
