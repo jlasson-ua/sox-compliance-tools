@@ -1,0 +1,22 @@
+{
+  "name": "sox-pr-screenshots",
+  "version": "1.0.0",
+  "description": "CLI tool to capture GitHub PR screenshots with timestamps for SOX compliance",
+  "main": "bin/sox-screenshots.js",
+  "bin": {
+    "sox-screenshots": "./bin/sox-screenshots.js"
+  },
+  "scripts": {
+    "start": "node bin/sox-screenshots.js"
+  },
+  "keywords": ["github", "screenshots", "sox", "compliance", "playwright"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "playwright": "^1.40.0"
+  }
+}
